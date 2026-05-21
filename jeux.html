@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameCritique - Toutes les critiques</title>
+    <link rel="stylesheet" type="text/css" href="stylesgrid2.css">
+    <link rel="stylesheet" href="styleboutton.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="img/profil.png">
+    <style>
+        body {
+            display: block; /* Surcharger le flex du body de stylesgrid2 */
+            background: linear-gradient(135deg, #080a0f 0%, #121622 100%);
+            color: #f1f3f5;
+            min-height: 100vh;
+            padding-top: 120px; /* Laisser de l'espace pour le header */
+        }
+        
+        body, input, select, textarea, button, h1, h2, h3, h4, label, p, span, a {
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .filter-bar {
+            background: rgba(18, 22, 32, 0.7) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            padding: 20px;
+            margin: 40px;
+            border-radius: 12px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .filter-bar input, .filter-bar select {
+            background-color: rgba(255, 255, 255, 0.04) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #fff !important;
+            padding: 10px 15px !important;
+            border-radius: 8px !important;
+            outline: none !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .filter-bar select {
+            appearance: none !important;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%237597de' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 1rem center !important;
+            background-size: 14px 10px !important;
+            padding-right: 2.5rem !important;
+        }
+
+        .filter-bar select option {
+            background-color: #121622 !important;
+            color: #fff !important;
+        }
+
+        .filter-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.35) !important;
+        }
+
+        .filter-bar input:focus, .filter-bar select:focus {
+            border-color: #7597de !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 0 10px rgba(117, 151, 222, 0.2) !important;
+        }
+
+        .box-title {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .box-score {
+            font-size: 1.4rem;
+            color: #ffc107;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .box-category {
+            font-size: 0.8rem;
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 12px;
+            width: fit-content;
+            margin: 0 auto;
+            color: #7597de;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo">GameCritique</a>
+        <ul id="nav-links">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="jeux.html" class="active">Jeux</a></li>
+            <!-- Inséré dynamiquement : Admin et Profil/Connexion -->
+        </ul>
+    </header>
+
+    <div class="filter-bar">
+        <div class="d-flex flex-column flex-grow-1">
+            <label for="search-input" class="mb-1" style="font-size: 0.85em; color: #aaa;">Rechercher un jeu</label>
+            <input type="text" id="search-input" placeholder="Ex: Witcher, Hades...">
+        </div>
+        <div class="d-flex flex-column">
+            <label for="category-select" class="mb-1" style="font-size: 0.85em; color: #aaa;">Catégorie</label>
+            <select id="category-select">
+                <option value="all">Toutes</option>
+                <option value="RPG">RPG</option>
+                <option value="Action">Action</option>
+                <option value="Indé">Indé</option>
+                <option value="Sport">Sport</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container" id="games-container">
+        <!-- Les critiques de jeux seront chargées ici dynamiquement -->
+    </div>
+
+    <!-- Modal d'authentification -->
+    <div class="modal-overlay" id="auth-modal">
+        <div class="gc-modal">
+            <button class="close-btn" id="close-auth-btn">&times;</button>
+            
+            <div id="login-section">
+                <h2>Connexion</h2>
+                <form class="gc-form" id="login-form">
+                    <label for="login-email">Adresse E-mail</label>
+                    <input type="email" id="login-email" required placeholder="nom@exemple.com">
+                    
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                    
+                    <button type="submit" class="gc-btn-submit">Se connecter</button>
+                </form>
+                <div class="text-center my-3 text-white-50">ou</div>
+                <button class="btn-google-login w-100" id="google-login-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                    </svg>
+                    Connexion avec Google
+                </button>
+                <p class="text-center mt-3 text-white-50 font-size-0.9">
+                    Nouveau ici ? <a href="#" id="go-to-signup" class="text-white fw-bold">Créer un compte</a>
+                </p>
+            </div>
+
+            <div id="signup-section" style="display: none;">
+                <h2>Créer un compte</h2>
+                <form class="gc-form" id="signup-form">
+                    <label for="signup-name">Nom d'affichage</label>
+                    <input type="text" id="signup-name" required placeholder="Ex: PlayerOne">
+
+                    <label for="signup-email">Adresse E-mail</label>
+                    <input type="email" id="signup-email" required placeholder="nom@exemple.com">
+                    
+                    <label for="signup-password">Mot de passe</label>
+                    <input type="password" id="signup-password" required placeholder="••••••••">
+                    
+                    <button type="submit" class="gc-btn-submit">S'inscrire</button>
+                </form>
+                <p class="text-center mt-3 text-white-50 font-size-0.9">
+                    Déjà inscrit ? <a href="#" id="go-to-login" class="text-white fw-bold">Se connecter</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="db.js"></script>
+    <script>
+        const authModal = document.getElementById('auth-modal');
+        const loginSection = document.getElementById('login-section');
+        const signupSection = document.getElementById('signup-section');
+        const navLinks = document.getElementById('nav-links');
+
+        function openAuthModal() {
+            authModal.classList.add('show');
+            showLogin();
+        }
+
+        function closeAuthModal() {
+            authModal.classList.remove('show');
+        }
+
+        function showLogin() {
+            loginSection.style.display = 'block';
+            signupSection.style.display = 'none';
+        }
+
+        function showSignup() {
+            loginSection.style.display = 'none';
+            signupSection.style.display = 'block';
+        }
+
+        function updateUI() {
+            const user = GameCritiqueDB.auth.getCurrentUser();
+            
+            navLinks.innerHTML = `
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="jeux.html" class="active">Jeux</a></li>
+            `;
+
+            if (user) {
+                if (user.role === 'admin') {
+                    navLinks.innerHTML += `<li><a href="admin.html">Admin</a></li>`;
+                }
+                navLinks.innerHTML += `
+                    <li class="ms-3">
+                        <div class="user-menu">
+                            <img src="${user.avatar}" alt="Avatar">
+                            <span>${user.displayName}</span>
+                            <a href="#" id="logout-btn" class="hoverrouge ms-2" style="border-radius:20px; padding:6px 12px;">Déconnexion</a>
+                        </div>
+                    </li>
+                `;
+                
+                document.getElementById('logout-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    GameCritiqueDB.auth.logout();
+                    updateUI();
+                    window.location.reload();
+                });
+            } else {
+                navLinks.innerHTML += `
+                    <li class="ms-3">
+                        <button class="btn-login" id="open-login-btn">Connexion</button>
+                    </li>
+                `;
+                document.getElementById('open-login-btn').addEventListener('click', openAuthModal);
+            }
+        }
+
+        // Événements d'auth
+        document.getElementById('close-auth-btn').addEventListener('click', closeAuthModal);
+        document.getElementById('go-to-signup').addEventListener('click', function(e) { e.preventDefault(); showSignup(); });
+        document.getElementById('go-to-login').addEventListener('click', function(e) { e.preventDefault(); showLogin(); });
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            try {
+                GameCritiqueDB.auth.login(email, pass);
+                closeAuthModal();
+                updateUI();
+                window.location.reload();
+            } catch(err) {
+                alert(err.message);
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const pass = document.getElementById('signup-password').value;
+            try {
+                GameCritiqueDB.auth.signUp(email, pass, name);
+                closeAuthModal();
+                updateUI();
+                window.location.reload();
+            } catch(err) {
+                alert(err.message);
+            }
+        });
+
+        document.getElementById('google-login-btn').addEventListener('click', function() {
+            const width = 500, height = 600;
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+            window.open('google-login.html', 'GoogleAuth', `width=${width},height=${height},left=${left},top=${top}`);
+        });
+
+        window.addEventListener("message", function(event) {
+            if (event.data && event.data.source === "google-login") {
+                GameCritiqueDB.auth.loginWithGoogle(event.data.email, event.data.displayName);
+                closeAuthModal();
+                updateUI();
+                window.location.reload();
+            }
+        });
+
+        // Chargement dynamique des jeux avec recherche et filtres
+        const searchInput = document.getElementById('search-input');
+        const categorySelect = document.getElementById('category-select');
+        const gamesContainer = document.getElementById('games-container');
+
+        function populateCategoryFilter() {
+            const allReviews = GameCritiqueDB.reviews.getAll();
+            const categories = ['all', ...new Set(allReviews.map(r => r.category))];
+            const current = categorySelect.value;
+            categorySelect.innerHTML = categories.map(c =>
+                `<option value="${c}">${c === 'all' ? 'Toutes les catégories' : c}</option>`
+            ).join('');
+            if (categories.includes(current)) categorySelect.value = current;
+        }
+
+        function renderGames() {
+            const searchQuery = searchInput.value.toLowerCase().trim();
+            const selectedCategory = categorySelect.value;
+            const allReviews = GameCritiqueDB.reviews.getAll();
+
+            const filteredReviews = allReviews.filter(review => {
+                const matchesSearch = review.title.toLowerCase().includes(searchQuery) || 
+                                      review.synopsis.toLowerCase().includes(searchQuery);
+                const matchesCategory = selectedCategory === 'all' || review.category === selectedCategory;
+                return matchesSearch && matchesCategory;
+            });
+
+            if (filteredReviews.length === 0) {
+                gamesContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align:center; padding: 60px 20px; color: rgba(255,255,255,0.4);">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🎮</div>
+                        <p style="font-size: 1.1rem;">Aucun jeu trouvé pour cette recherche.</p>
+                    </div>`;
+                return;
+            }
+
+            gamesContainer.innerHTML = filteredReviews.map(review => {
+                return `
+                    <div class="box">
+                        <div class="content">
+                            <a href="critique.html?id=${review.id}">
+                                <div style="height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; position: relative;">
+                                    <img src="${review.imageUrl}" alt="${review.title}" style="max-height: 100%; max-width: 100px; object-fit: contain; margin-bottom: 0; filter: drop-shadow(0 4px 12px rgba(117,151,222,0.3));">
+                                    ${review.musicUrl ? '<div style="position:absolute;bottom:4px;right:4px;background:rgba(117,151,222,0.25);border:1px solid rgba(117,151,222,0.5);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;backdrop-filter:blur(4px);">🎵</div>' : ''}
+                                </div>
+                                <span class="box-category">${review.category}</span>
+                                <p class="box-title">${review.title}</p>
+                                <p class="box-score">${review.overallScore}/100</p>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        searchInput.addEventListener('input', renderGames);
+        categorySelect.addEventListener('change', renderGames);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUI();
+            populateCategoryFilter();
+            renderGames();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameCritique - Administration</title>
+    <link rel="stylesheet" href="styleboutton.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="img/profil.png">
+    <style>
+        body {
+            background: linear-gradient(135deg, #080a0f 0%, #121622 100%);
+            color: #f1f3f5;
+            min-height: 100vh;
+            padding-top: 120px;
+        }
+        
+        body, input, select, textarea, button, table, td, th, h1, h2, h3, h4, label {
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .admin-container {
+            background: rgba(18, 22, 32, 0.75);
+            backdrop-filter: blur(12px);
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .form-section h3 {
+            border-bottom: 2px solid #7597de;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .gc-form input, 
+        .gc-form select, 
+        .gc-form textarea {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            background: rgba(255, 255, 255, 0.04) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            color: #fff !important;
+            font-size: 0.95rem !important;
+            transition: all 0.3s ease !important;
+            outline: none !important;
+            margin-top: 5px;
+        }
+
+        .gc-form select {
+            appearance: none !important;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%237597de' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 1.25rem center !important;
+            background-size: 16px 12px !important;
+            padding-right: 2.5rem !important;
+        }
+
+        .gc-form select option {
+            background-color: #121622 !important;
+            color: #fff !important;
+        }
+
+        .gc-form input::placeholder, 
+        .gc-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.35) !important;
+        }
+
+        .gc-form input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) sepia(50%) saturate(1000%) hue-rotate(190deg) brightness(95%);
+            cursor: pointer;
+        }
+
+        .gc-form input:focus, 
+        .gc-form select:focus, 
+        .gc-form textarea:focus {
+            border-color: #7597de !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 0 12px rgba(117, 151, 222, 0.25) !important;
+        }
+
+        .gc-form label {
+            display: block;
+            color: #a0aec0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .score-slider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 5px;
+        }
+        
+        .score-slider input[type="range"] {
+            flex-grow: 1 !important;
+            accent-color: #7597de;
+            cursor: pointer;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+        
+        .score-value {
+            font-weight: 600;
+            color: #7597de;
+            width: 40px;
+            text-align: right;
+            font-size: 1rem;
+        }
+
+        .table-dark {
+            background-color: transparent !important;
+        }
+        
+        .table-dark th {
+            color: #7597de;
+            border-bottom: 2px solid rgba(117, 151, 222, 0.3) !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 15px 10px;
+        }
+        
+        .table-dark td {
+            border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+            padding: 15px 10px;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+        }
+
+        .table-dark tr:hover td {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.02) !important;
+        }
+        
+        .badge {
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        /* --- ANNULATION DE LA POLLUTION GLOBALE DES BOUTONS PAR STYLE.CSS --- */
+        button.btn, 
+        button.gc-btn-submit, 
+        button.btn-login, 
+        button.btn-google-login, 
+        button.close-btn {
+            background-color: transparent !important;
+            color: inherit !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            position: static !important;
+            width: auto !important;
+            height: auto !important;
+        }
+
+        button.btn::before, button.btn::after,
+        button.gc-btn-submit::before, button.gc-btn-submit::after,
+        button.btn-login::before, button.btn-login::after,
+        button.btn-google-login::before, button.btn-google-login::after,
+        button.close-btn::before, button.close-btn::after {
+            display: none !important;
+            content: none !important;
+        }
+
+        /* Restauration des classes Bootstrap spécifiques */
+        button.btn {
+            display: inline-block !important;
+            font-weight: 400 !important;
+            line-height: 1.5 !important;
+            text-align: center !important;
+            text-decoration: none !important;
+            vertical-align: middle !important;
+            cursor: pointer !important;
+            user-select: none !important;
+            border: 1px solid transparent !important;
+            padding: 0.375rem 0.75rem !important;
+            font-size: 1rem !important;
+            border-radius: 0.375rem !important;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+        }
+        button.btn-sm {
+            padding: 0.25rem 0.5rem !important;
+            font-size: 0.875rem !important;
+            border-radius: 0.25rem !important;
+        }
+        button.btn-danger {
+            color: #fff !important;
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+        }
+        button.btn-danger:hover {
+            background-color: #bb2d3b !important;
+            border-color: #b02a37 !important;
+        }
+        button.btn-outline-light {
+            color: #f8f9fa !important;
+            border-color: #f8f9fa !important;
+            background-color: transparent !important;
+        }
+        button.btn-outline-light:hover {
+            color: #000 !important;
+            background-color: #f8f9fa !important;
+            border-color: #f8f9fa !important;
+        }
+
+        /* Bouton Soumettre Critique */
+        button.gc-btn-submit {
+            display: block !important;
+            width: 100% !important;
+            background: #7597de !important;
+            color: #fff !important;
+            padding: 12px 20px !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            cursor: pointer !important;
+            text-align: center !important;
+            transition: all 0.3s ease !important;
+            border: none !important;
+        }
+        button.gc-btn-submit:hover {
+            background: #5b7bb8 !important;
+            box-shadow: 0 0 15px rgba(117, 151, 222, 0.4) !important;
+        }
+
+        /* Bouton Connexion Header */
+        button.btn-login {
+            display: inline-block !important;
+            background: #fff !important;
+            color: #2b1055 !important;
+            border-radius: 20px !important;
+            padding: 6px 20px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            border: none !important;
+            transition: all 0.3s !important;
+        }
+        button.btn-login:hover {
+            background: #2b1055 !important;
+            color: #fff !important;
+        }
+
+        /* Bouton Connexion Google */
+        button.btn-google-login {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 10px !important;
+            background: #ea4335 !important;
+            color: #fff !important;
+            width: 100% !important;
+            padding: 12px !important;
+            border-radius: 8px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            border: none !important;
+            transition: 0.3s !important;
+        }
+        button.btn-google-login:hover {
+            background: #d3382b !important;
+        }
+
+        /* Fermeture Modal */
+        button.close-btn {
+            position: absolute !important;
+            top: 15px !important;
+            right: 20px !important;
+            color: #888 !important;
+            font-size: 24px !important;
+            cursor: pointer !important;
+        }
+        button.close-btn:hover {
+            color: #fff !important;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo">GameCritique</a>
+        <ul id="nav-links">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="jeux.html">Jeux</a></li>
+            <!-- Inséré dynamiquement -->
+        </ul>
+    </header>
+
+    <div class="container my-5">
+        <!-- Ecran d'accès refusé -->
+        <div id="access-denied" class="text-center my-5" style="display:none;">
+            <h2 class="text-danger">Accès Refusé</h2>
+            <p class="text-white-50">Vous devez vous connecter en tant qu'administrateur pour accéder à cette page.</p>
+            <button class="btn btn-outline-light mt-3" id="admin-login-trigger">Se connecter</button>
+            <a href="index.html" class="btn btn-link text-white-50 d-block mt-3">Retour à l'accueil</a>
+        </div>
+
+        <!-- Dashboard Admin -->
+        <div id="admin-dashboard" style="display:none;">
+            <h1 class="mb-5 text-white">Dashboard Administrateur</h1>
+            
+            <div class="row">
+                <!-- Formulaire d'ajout -->
+                <div class="col-xl-7 col-lg-12 mb-4">
+                    <div class="admin-container">
+                        <div class="form-section">
+                            <h3>Ajouter une critique de jeu</h3>
+                            <form id="add-review-form" class="gc-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="review-title">Titre du jeu</label>
+                                        <input type="text" id="review-title" required placeholder="Ex: Elden Ring">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="review-category">Catégorie</label>
+                                        <div style="display:flex; gap:8px;">
+                                            <select id="review-category" required style="flex:1;">
+                                                <option value="RPG">RPG</option>
+                                                <option value="Action">Action / Aventure</option>
+                                                <option value="Indé">Índépendant</option>
+                                                <option value="Sport">Sport</option>
+                                                <option value="FPS">FPS</option>
+                                                <option value="Horreur">Horreur</option>
+                                                <option value="Simulation">Simulation</option>
+                                                <option value="Stratégie">Stratégie</option>
+                                                <option value="custom">+ Nouvelle catégorie...</option>
+                                            </select>
+                                        </div>
+                                        <div id="custom-category-field" style="display:none; margin-top:8px;">
+                                            <input type="text" id="custom-category-input" placeholder="Nom de la nouvelle catégorie...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="review-developer">Développeur</label>
+                                        <input type="text" id="review-developer" placeholder="Ex: FromSoftware">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="review-publisher">Éditeur</label>
+                                        <input type="text" id="review-publisher" placeholder="Ex: Bandai Namco">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="review-date">Date de sortie</label>
+                                        <input type="date" id="review-date">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Jaquette du jeu</label>
+                                    <div style="background:rgba(117,151,222,0.06); border:2px dashed rgba(117,151,222,0.3); border-radius:12px; padding:20px; text-align:center; margin-top:6px;" id="cover-drop-zone">
+                                        <div id="cover-preview" style="display:none; margin-bottom:15px;">
+                                            <img id="cover-preview-img" src="" alt="Aperçu" style="max-height:140px; max-width:140px; object-fit:contain; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                                        </div>
+                                        <div style="margin-bottom:12px; color:#a0aec0; font-size:0.85rem;">
+                                            🖼️ Résolution conseillée&nbsp;: <strong style="color:#7597de;">600 &times; 800 px</strong> &mdash; Format portrait (3:4) &bull; JPG, PNG, WEBP
+                                        </div>
+                                        <label for="review-image-file" style="display:inline-flex; align-items:center; gap:8px; background:#7597de; color:#fff; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:600; font-size:0.95rem; transition:all 0.3s;">
+                                            📲 Importer depuis le PC
+                                        </label>
+                                        <input type="file" id="review-image-file" accept="image/*" style="display:none;">
+                                        <div style="margin:12px 0; color:#666; font-size:0.85rem;">ou</div>
+                                        <input type="url" id="review-image-url" placeholder="Coller une URL d’image (https://...)" style="text-align:center;">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="review-music-url">🎵 Musique officielle du jeu (YouTube ou Soundcloud)</label>
+                                    <input type="url" id="review-music-url" placeholder="Ex: https://www.youtube.com/watch?v=...">
+                                    <small style="color:#666; font-size:0.8rem; margin-top:4px; display:block;">La musique se lancera automatiquement à l’ouverture de la critique (format YouTube embed ou URL audio directe).</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="review-synopsis">Synopsis (courte description)</label>
+                                    <input type="text" id="review-synopsis" required placeholder="Un court résumé accrocheur...">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="review-description">Critique détaillée</label>
+                                    <textarea id="review-description" rows="6" required placeholder="Votre avis constructif sur le jeu..."></textarea>
+                                </div>
+
+                                <h4 class="mt-4 text-white">Notes de test (sur 100)</h4>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label>Gameplay</label>
+                                        <div class="score-slider">
+                                            <input type="range" class="form-range" id="score-gameplay" min="0" max="100" value="80">
+                                            <span class="score-value" id="val-gameplay">80</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label>Graphismes</label>
+                                        <div class="score-slider">
+                                            <input type="range" class="form-range" id="score-graphics" min="0" max="100" value="80">
+                                            <span class="score-value" id="val-graphics">80</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label>Bande-son</label>
+                                        <div class="score-slider">
+                                            <input type="range" class="form-range" id="score-sound" min="0" max="100" value="80">
+                                            <span class="score-value" id="val-sound">80</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label>Durée de vie</label>
+                                        <div class="score-slider">
+                                            <input type="range" class="form-range" id="score-lifespan" min="0" max="100" value="80">
+                                            <span class="score-value" id="val-lifespan">80</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="gc-btn-submit w-100 mt-3">Publier la critique</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gestion des critiques -->
+                <div class="col-xl-5 col-lg-12 mb-4">
+                    <div class="admin-container">
+                        <div class="form-section">
+                            <h3>Gérer les critiques existantes</h3>
+                            <div class="table-responsive mt-3">
+                                <table class="table table-dark table-hover align-middle" style="font-size:0.9em;">
+                                    <thead>
+                                        <tr>
+                                            <th>Jeu</th>
+                                            <th>Catégorie</th>
+                                            <th>Score</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reviews-list-body">
+                                        <!-- Rempli dynamiquement -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal d'édition de critique -->
+    <div class="modal-overlay" id="edit-review-modal" style="z-index:200000;">
+        <div class="gc-modal" style="max-width:650px; width:95%; max-height:90vh; overflow-y:auto;">
+            <button class="close-btn" id="close-edit-modal">&times;</button>
+            <h2 style="font-size:1.4rem; margin-bottom:20px;">✏️ Modifier la critique</h2>
+            <form id="edit-review-form" class="gc-form">
+                <input type="hidden" id="edit-review-id">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Titre du jeu</label>
+                        <input type="text" id="edit-title" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Catégorie</label>
+                        <input type="text" id="edit-category" required placeholder="Ex: RPG, Action...">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label>Développeur</label>
+                        <input type="text" id="edit-developer">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>Éditeur</label>
+                        <input type="text" id="edit-publisher">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>Date de sortie</label>
+                        <input type="date" id="edit-date">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label>Synopsis</label>
+                    <input type="text" id="edit-synopsis" required>
+                </div>
+                <div class="mb-3">
+                    <label>Critique détaillée</label>
+                    <textarea id="edit-description" rows="5" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label>🎵 Musique officielle (YouTube URL)</label>
+                    <input type="url" id="edit-music-url" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <h4 style="color:#fff; font-size:1rem; margin:15px 0 10px;">Notes (sur 100)</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Gameplay</label>
+                        <div class="score-slider">
+                            <input type="range" id="edit-score-gameplay" min="0" max="100" value="80">
+                            <span class="score-value" id="edit-val-gameplay">80</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Graphismes</label>
+                        <div class="score-slider">
+                            <input type="range" id="edit-score-graphics" min="0" max="100" value="80">
+                            <span class="score-value" id="edit-val-graphics">80</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Bande-son</label>
+                        <div class="score-slider">
+                            <input type="range" id="edit-score-sound" min="0" max="100" value="80">
+                            <span class="score-value" id="edit-val-sound">80</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Durée de vie</label>
+                        <div class="score-slider">
+                            <input type="range" id="edit-score-lifespan" min="0" max="100" value="80">
+                            <span class="score-value" id="edit-val-lifespan">80</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button type="submit" class="gc-btn-submit" style="flex:1;">Sauvegarder les modifications</button>
+                    <button type="button" id="cancel-edit-btn" style="flex:0 0 auto; background:rgba(255,255,255,0.06); color:#aaa; border:1px solid rgba(255,255,255,0.1); padding:12px 20px; border-radius:8px; cursor:pointer;">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal d'authentification -->
+    <div class="modal-overlay" id="auth-modal">
+        <div class="gc-modal">
+            <button class="close-btn" id="close-auth-btn">&times;</button>
+            
+            <div id="login-section">
+                <h2>Connexion</h2>
+                <form class="gc-form" id="login-form">
+                    <label for="login-email">Adresse E-mail</label>
+                    <input type="email" id="login-email" required placeholder="nom@exemple.com">
+                    
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                    
+                    <button type="submit" class="gc-btn-submit">Se connecter</button>
+                </form>
+                <div class="text-center my-3 text-white-50">ou</div>
+                <button class="btn-google-login w-100" id="google-login-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                    </svg>
+                    Connexion avec Google
+                </button>
+                <p class="text-center mt-3 text-white-50 font-size-0.9">
+                    Nouveau ici ? <a href="#" id="go-to-signup" class="text-white fw-bold">Créer un compte</a>
+                </p>
+            </div>
+
+            <div id="signup-section" style="display: none;">
+                <h2>Créer un compte</h2>
+                <form class="gc-form" id="signup-form">
+                    <label for="signup-name">Nom d'affichage</label>
+                    <input type="text" id="signup-name" required placeholder="Ex: PlayerOne">
+
+                    <label for="signup-email">Adresse E-mail</label>
+                    <input type="email" id="signup-email" required placeholder="nom@exemple.com">
+                    
+                    <label for="signup-password">Mot de passe</label>
+                    <input type="password" id="signup-password" required placeholder="••••••••">
+                    
+                    <button type="submit" class="gc-btn-submit">S'inscrire</button>
+                </form>
+                <p class="text-center mt-3 text-white-50 font-size-0.9">
+                    Déjà inscrit ? <a href="#" id="go-to-login" class="text-white fw-bold">Se connecter</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="db.js"></script>
+    <script>
+        const authModal = document.getElementById('auth-modal');
+        const loginSection = document.getElementById('login-section');
+        const signupSection = document.getElementById('signup-section');
+        const navLinks = document.getElementById('nav-links');
+
+        const accessDenied = document.getElementById('access-denied');
+        const adminDashboard = document.getElementById('admin-dashboard');
+
+        function openAuthModal() {
+            authModal.classList.add('show');
+            showLogin();
+        }
+
+        function closeAuthModal() {
+            authModal.classList.remove('show');
+        }
+
+        function showLogin() {
+            loginSection.style.display = 'block';
+            signupSection.style.display = 'none';
+        }
+
+        function showSignup() {
+            loginSection.style.display = 'none';
+            signupSection.style.display = 'block';
+        }
+
+        function checkAuthorization() {
+            const user = GameCritiqueDB.auth.getCurrentUser();
+            if (user && user.role === 'admin') {
+                adminDashboard.style.display = 'block';
+                accessDenied.style.display = 'none';
+                renderAdminReviewsList();
+            } else {
+                adminDashboard.style.display = 'none';
+                accessDenied.style.display = 'block';
+            }
+        }
+
+        function updateUI() {
+            const user = GameCritiqueDB.auth.getCurrentUser();
+            
+            navLinks.innerHTML = `
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="jeux.html">Jeux</a></li>
+            `;
+
+            if (user) {
+                if (user.role === 'admin') {
+                    navLinks.innerHTML += `<li><a href="admin.html" class="active">Admin</a></li>`;
+                }
+                navLinks.innerHTML += `
+                    <li class="ms-3">
+                        <div class="user-menu">
+                            <img src="${user.avatar}" alt="Avatar">
+                            <span>${user.displayName}</span>
+                            <a href="#" id="logout-btn" class="hoverrouge ms-2" style="border-radius:20px; padding:6px 12px;">Déconnexion</a>
+                        </div>
+                    </li>
+                `;
+                
+                document.getElementById('logout-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    GameCritiqueDB.auth.logout();
+                    updateUI();
+                    checkAuthorization();
+                });
+            } else {
+                navLinks.innerHTML += `
+                    <li class="ms-3">
+                        <button class="btn-login" id="open-login-btn">Connexion</button>
+                    </li>
+                `;
+                document.getElementById('open-login-btn').addEventListener('click', openAuthModal);
+            }
+        }
+
+        // Événements d'auth
+        document.getElementById('close-auth-btn').addEventListener('click', closeAuthModal);
+        document.getElementById('go-to-signup').addEventListener('click', function(e) { e.preventDefault(); showSignup(); });
+        document.getElementById('go-to-login').addEventListener('click', function(e) { e.preventDefault(); showLogin(); });
+        document.getElementById('admin-login-trigger').addEventListener('click', openAuthModal);
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            try {
+                GameCritiqueDB.auth.login(email, pass);
+                closeAuthModal();
+                updateUI();
+                checkAuthorization();
+            } catch(err) {
+                alert(err.message);
+            }
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const pass = document.getElementById('signup-password').value;
+            try {
+                GameCritiqueDB.auth.signUp(email, pass, name);
+                closeAuthModal();
+                updateUI();
+                checkAuthorization();
+            } catch(err) {
+                alert(err.message);
+            }
+        });
+
+        document.getElementById('google-login-btn').addEventListener('click', function() {
+            const width = 500, height = 600;
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+            window.open('google-login.html', 'GoogleAuth', `width=${width},height=${height},left=${left},top=${top}`);
+        });
+
+        window.addEventListener("message", function(event) {
+            if (event.data && event.data.source === "google-login") {
+                GameCritiqueDB.auth.loginWithGoogle(event.data.email, event.data.displayName);
+                closeAuthModal();
+                updateUI();
+                checkAuthorization();
+            }
+        });
+
+        // Gestion des catégories personnalisées
+        const categorySelect = document.getElementById('review-category');
+        const customCategoryField = document.getElementById('custom-category-field');
+        const customCategoryInput = document.getElementById('custom-category-input');
+
+        // Charger les catégories custom sauvegardes
+        function loadCustomCategories() {
+            const saved = JSON.parse(localStorage.getItem('gc_custom_categories') || '[]');
+            saved.forEach(cat => {
+                if (![...categorySelect.options].some(o => o.value === cat)) {
+                    const opt = new Option(cat, cat);
+                    categorySelect.insertBefore(opt, categorySelect.querySelector('option[value="custom"]'));
+                }
+            });
+        }
+        loadCustomCategories();
+
+        categorySelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customCategoryField.style.display = 'block';
+                customCategoryInput.setAttribute('required', 'required');
+            } else {
+                customCategoryField.style.display = 'none';
+                customCategoryInput.removeAttribute('required');
+            }
+        });
+
+        // Gestion de l'import de jaquette depuis le PC (Base64)
+        let coverBase64 = null;
+        const coverFileInput = document.getElementById('review-image-file');
+        const coverUrlInput = document.getElementById('review-image-url');
+        const coverPreview = document.getElementById('cover-preview');
+        const coverPreviewImg = document.getElementById('cover-preview-img');
+
+        coverFileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                coverBase64 = e.target.result;
+                coverPreviewImg.src = coverBase64;
+                coverPreview.style.display = 'block';
+                coverUrlInput.value = '';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        coverUrlInput.addEventListener('input', function() {
+            if (this.value) {
+                coverBase64 = null;
+                coverPreviewImg.src = this.value;
+                coverPreview.style.display = 'block';
+            }
+        });
+
+        // Drag & Drop sur la zone de dépôt
+        const dropZone = document.getElementById('cover-drop-zone');
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#7597de'; dropZone.style.background = 'rgba(117,151,222,0.12)'; });
+        dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'rgba(117,151,222,0.3)'; dropZone.style.background = 'rgba(117,151,222,0.06)'; });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'rgba(117,151,222,0.3)'; dropZone.style.background = 'rgba(117,151,222,0.06)';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { coverBase64 = ev.target.result; coverPreviewImg.src = coverBase64; coverPreview.style.display = 'block'; };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Liaison des sliders de note
+        const sliders = ['gameplay', 'graphics', 'sound', 'lifespan'];
+        sliders.forEach(key => {
+            const slider = document.getElementById(`score-${key}`);
+            const output = document.getElementById(`val-${key}`);
+            slider.addEventListener('input', function() {
+                output.innerText = this.value;
+            });
+        });
+
+        // Choix de la jaquette (supprimé - remplacé par file upload)
+
+        // Soumission du formulaire de création de critique
+        document.getElementById('add-review-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Récupérer la catégorie (custom ou sélectionnée)
+            let selectedCategory = categorySelect.value;
+            if (selectedCategory === 'custom') {
+                selectedCategory = customCategoryInput.value.trim();
+                if (!selectedCategory) { alert('Veuillez saisir un nom de catégorie.'); return; }
+                // Sauvegarder la catégorie custom
+                const saved = JSON.parse(localStorage.getItem('gc_custom_categories') || '[]');
+                if (!saved.includes(selectedCategory)) {
+                    saved.push(selectedCategory);
+                    localStorage.setItem('gc_custom_categories', JSON.stringify(saved));
+                    const opt = new Option(selectedCategory, selectedCategory);
+                    categorySelect.insertBefore(opt, categorySelect.querySelector('option[value="custom"]'));
+                }
+            }
+
+            // Récupérer l'URL de l'image (fichier importé ou URL)
+            const imageUrl = coverBase64 || coverUrlInput.value || 'img/profile-placeholder.png';
+
+            const newReviewData = {
+                title: document.getElementById('review-title').value,
+                category: selectedCategory,
+                developer: document.getElementById('review-developer').value,
+                publisher: document.getElementById('review-publisher').value,
+                releaseDate: document.getElementById('review-date').value,
+                synopsis: document.getElementById('review-synopsis').value,
+                description: document.getElementById('review-description').value,
+                imageUrl: imageUrl,
+                musicUrl: document.getElementById('review-music-url').value.trim() || null,
+                ratings: {
+                    gameplay: parseInt(document.getElementById('score-gameplay').value),
+                    graphics: parseInt(document.getElementById('score-graphics').value),
+                    sound: parseInt(document.getElementById('score-sound').value),
+                    lifespan: parseInt(document.getElementById('score-lifespan').value)
+                }
+            };
+
+            try {
+                GameCritiqueDB.reviews.add(newReviewData);
+                // Notification toast au lieu d'alert
+                showToast('✅ Critique publiée avec succès !');
+                this.reset();
+                coverBase64 = null;
+                coverPreview.style.display = 'none';
+                customCategoryField.style.display = 'none';
+                // Réinitialiser les sliders
+                sliders.forEach(key => {
+                    document.getElementById(`score-${key}`).value = 80;
+                    document.getElementById(`val-${key}`).innerText = 80;
+                });
+                renderAdminReviewsList();
+            } catch(err) {
+                alert(err.message);
+            }
+        });
+
+        // Toast de notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed;bottom:80px;right:30px;background:linear-gradient(135deg,#7597de,#5b7bb8);color:#fff;padding:14px 22px;border-radius:10px;font-weight:600;font-size:0.95rem;z-index:99999;box-shadow:0 8px 25px rgba(0,0,0,0.4);animation:slideIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity='0'; toast.style.transition='opacity 0.5s'; setTimeout(()=>toast.remove(), 500); }, 3000);
+        }
+
+        // Afficher la liste des critiques pour suppression
+        function renderAdminReviewsList() {
+            const body = document.getElementById('reviews-list-body');
+            const reviews = GameCritiqueDB.reviews.getAll();
+
+            if (reviews.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" class="text-center text-white-50">Aucune critique disponible.</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = reviews.map(review => {
+                return `
+                    <tr>
+                        <td><strong>${review.title}</strong>${review.musicUrl ? ' <span title="Musique associée" style="color:#7597de;">&#127925;</span>' : ''}</td>
+                        <td><span class="badge bg-secondary">${review.category}</span></td>
+                        <td><span class="text-warning fw-bold">${review.overallScore}/100</span></td>
+                        <td style="white-space:nowrap; display:flex; gap:6px; flex-wrap:wrap;">
+                            <button class="btn btn-sm btn-outline-light py-1 px-2" onclick="openEditModal('${review.id}')">✏️ Modifier</button>
+                            <button class="btn btn-sm btn-danger py-1 px-2" onclick="deleteReview('${review.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.deleteReview = function(id) {
+            if (confirm("Voulez-vous vraiment supprimer cette critique ? Cette action supprimera également tous les commentaires associés.")) {
+                try {
+                    GameCritiqueDB.reviews.delete(id);
+                    renderAdminReviewsList();
+                    showToast('🗑️ Critique supprimée.');
+                } catch(err) {
+                    alert(err.message);
+                }
+            }
+        };
+
+        // === MODAL D'ÉDITION DE CRITIQUE ===
+        const editModal = document.getElementById('edit-review-modal');
+
+        // Liaison des sliders du modal d'édition
+        ['gameplay', 'graphics', 'sound', 'lifespan'].forEach(key => {
+            const s = document.getElementById(`edit-score-${key}`);
+            const v = document.getElementById(`edit-val-${key}`);
+            s.addEventListener('input', () => v.innerText = s.value);
+        });
+
+        window.openEditModal = function(id) {
+            const review = GameCritiqueDB.reviews.getById(id);
+            if (!review) return;
+
+            document.getElementById('edit-review-id').value = id;
+            document.getElementById('edit-title').value = review.title;
+            document.getElementById('edit-category').value = review.category;
+            document.getElementById('edit-developer').value = review.developer || '';
+            document.getElementById('edit-publisher').value = review.publisher || '';
+            document.getElementById('edit-date').value = review.releaseDate || '';
+            document.getElementById('edit-synopsis').value = review.synopsis;
+            document.getElementById('edit-description').value = review.description;
+            document.getElementById('edit-music-url').value = review.musicUrl || '';
+
+            ['gameplay', 'graphics', 'sound', 'lifespan'].forEach(key => {
+                const val = review.ratings[key] || 80;
+                document.getElementById(`edit-score-${key}`).value = val;
+                document.getElementById(`edit-val-${key}`).innerText = val;
+            });
+
+            editModal.classList.add('show');
+        };
+
+        document.getElementById('close-edit-modal').addEventListener('click', () => editModal.classList.remove('show'));
+        document.getElementById('cancel-edit-btn').addEventListener('click', () => editModal.classList.remove('show'));
+        editModal.addEventListener('click', (e) => { if (e.target === editModal) editModal.classList.remove('show'); });
+
+        document.getElementById('edit-review-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-review-id').value;
+            const updatedData = {
+                title: document.getElementById('edit-title').value,
+                category: document.getElementById('edit-category').value,
+                developer: document.getElementById('edit-developer').value,
+                publisher: document.getElementById('edit-publisher').value,
+                releaseDate: document.getElementById('edit-date').value,
+                synopsis: document.getElementById('edit-synopsis').value,
+                description: document.getElementById('edit-description').value,
+                musicUrl: document.getElementById('edit-music-url').value.trim() || null,
+                ratings: {
+                    gameplay: parseInt(document.getElementById('edit-score-gameplay').value),
+                    graphics: parseInt(document.getElementById('edit-score-graphics').value),
+                    sound: parseInt(document.getElementById('edit-score-sound').value),
+                    lifespan: parseInt(document.getElementById('edit-score-lifespan').value),
+                }
+            };
+            try {
+                GameCritiqueDB.reviews.update(id, updatedData);
+                editModal.classList.remove('show');
+                renderAdminReviewsList();
+                showToast('✅ Critique mise à jour avec succès !');
+            } catch(err) {
+                alert(err.message);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUI();
+            checkAuthorization();
+        });
+    </script>
+</body>
+
+</html>
